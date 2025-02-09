@@ -38,6 +38,16 @@ The goal of the game is to control the snake to eat as much food as possible wit
 
 ## How to Compile and Run
 
+### On Mac
+
+#### Using Clang:
+1. Open the Terminal and navigate to the folder where the game file is saved.
+2. Use the following command to compile the code:
+   ```bash
+   clang++ snakegame_mac.cpp -o snakegame_mac
+3. Run the compiled game:
+   ```bash
+   ./snakegame_mac
 ### On Windows
 
 #### Using GCC (MinGW):
@@ -45,20 +55,11 @@ The goal of the game is to control the snake to eat as much food as possible wit
 1. Open the **Command Prompt** (or **PowerShell**) in the folder where the game file is saved.
 2. Use the following command to compile the code:
    ```bash
-   g++ snake_game.cpp -o snake_game.exe
+   g++ snakegame_windows.cpp -o snakegame_windows.exe
 3. Run the compiled game:
    ```bash
-   ./snake_game.exe
-### On Mac
+   ./snakegame_windows.exe
 
-#### Using Clang:
-1. Open the Terminal and navigate to the folder where the game file is saved.
-2. Use the following command to compile the code:
-   ```bash
-   clang++ snake_game.cpp -o snake_game
-3. Run the compiled game:
-   ```bash
-   ./snake_game
 ## Display of the Game
 The game is displayed in the console using ASCII characters:
 ```
