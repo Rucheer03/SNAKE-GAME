@@ -1,8 +1,8 @@
 # Snake Game 🐍🐍🐍
 
 ### Created by:
-- **Rucheer Patel** - 202404034
-- **Preet Patel** - 202404027
+- **Rucheer Patel** 
+- **Preet Patel** 
 
 ---
 
