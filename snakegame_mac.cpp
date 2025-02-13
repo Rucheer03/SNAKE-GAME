@@ -9,10 +9,10 @@ using namespace std;
 
 const int GRID_WIDTH = 40; // width of the grid (40 columns)
 const int GRID_HEIGHT = 20; // height of the grid (20 rows)
-const char SNAKE_BODY = '0';
+const char SNAKE_BODY = 'O';
 const char FOOD = '$';
 const char EMPTY = ' ';
-
+int highScore = 0;
 // Direction enum for snake movement
 enum Direction { STOP = 0, UP, DOWN, LEFT, RIGHT };
 
@@ -88,7 +88,9 @@ public:
 
     Snake() {
         dir = STOP;
-        body.push_back(make_pair(GRID_WIDTH / 2, GRID_HEIGHT / 2)); // Start at center of grid
+        body.push_back(make_pair(GRID_WIDTH / 2, GRID_HEIGHT / 2));
+        body.push_back(make_pair(GRID_WIDTH / 2, GRID_HEIGHT / 2-1));
+        body.push_back(make_pair(GRID_WIDTH / 2, GRID_HEIGHT / 2-2)); // Start at center of grid
     }
 
     void move() {
@@ -112,7 +114,7 @@ public:
 
     bool hasCollided() {
         // Check collision with self
-        for (size_t i = 1; i < body.size(); ++i) {
+        for (size_t i = 3; i < body.size(); ++i) {
             if (body[i] == body[0]) return true;
         }
 
@@ -127,10 +129,12 @@ private:
     Snake snake;
     Food food;
     int score;
+    int foodEaten;
     bool gameOver;
+    int sleepDuration;
 
 public:
-    Game() : food(GRID_WIDTH, GRID_HEIGHT), score(0), gameOver(false) {
+    Game() : food(GRID_WIDTH, GRID_HEIGHT), score(0), foodEaten(0), gameOver(false), sleepDuration(200000) {
         food.respawn(GRID_WIDTH, GRID_HEIGHT, snake.body); // Ensure food is placed at game start
     }
 
@@ -138,28 +142,28 @@ public:
         system("clear");
 
         // Print Game Title and Instructions
-        cout << "--------------------------------------" << endl;
-        cout << "             SNAKE GAME" << endl;
-        cout << "--------------------------------------" << endl;
+        cout << "\033[1;31m--------------------------------------\033[0m" << endl;
+        cout << "\033[1;32m             SNAKE GAME\033[0m" << endl;
+        cout << "\033[1;31m--------------------------------------\033[0m" << endl;
         cout << "Controls: 'W' - Up | 'S' - Down | 'A' - Left | 'D' - Right | 'X' - Exit" << endl;
-        cout << "--------------------------------------" << endl;
+        cout << "\033[1;35m--------------------------------------\033[0m" << endl;
 
         // Draw the grid
         for (int i = 0; i < GRID_HEIGHT; i++) {
             for (int j = 0; j < GRID_WIDTH; j++) {
                 if (i == 0 || i == GRID_HEIGHT - 1 || j == 0 || j == GRID_WIDTH - 1) {
-                    cout << "#"; // Boundary
+                    cout << "\033[1;34m#\033[0m"; // Boundary
                 } else {
                     bool isSnake = false;
                     for (const auto &bodyPart : snake.body) {
                         if (bodyPart.first == j && bodyPart.second == i) {
-                            cout << SNAKE_BODY ; // Snake in green
+                            cout << "\033[1;32m"<< SNAKE_BODY<< "\033[0m" ; // Snake in green
                             isSnake = true;
                             break;
                         }
                     }
                     if (food.x == j && food.y == i) {
-                        cout <<  FOOD ; // Food in yellow
+                        cout << "\033[1;35m" <<  FOOD << "\033[0m"; // Food in yellow
                     } else if (!isSnake) {
                         cout << EMPTY;
                     }
@@ -170,6 +174,7 @@ public:
 
         // Display score in a stylish way
         cout <<"Score : " << score  << endl;
+        cout << "\nHighest Score: " << highScore << endl<<endl;
     }
 
     void input() {
@@ -190,8 +195,14 @@ public:
         // Check if snake eats the food
         if (snake.body[0].first == food.x && snake.body[0].second == food.y) {
             score += 10;
+            foodEaten++;
             snake.grow();
             food.respawn(GRID_WIDTH, GRID_HEIGHT, snake.body);
+
+            // Increase speed after every 5 food items eaten
+            if (foodEaten % 6 == 0) {
+                sleepDuration = max(50000, sleepDuration - 50000); // Decrease sleep duration but not below 50ms
+            }
         }
         snake.move();
         // Check for collisions
@@ -208,7 +219,7 @@ public:
             draw();
             input();
             logic();
-            usleep(200000); // Adjust speed to make the snake faster
+            usleep(sleepDuration); // Adjust speed to make the snake faster
         }
 
         enableEcho(oldt);
@@ -220,7 +231,7 @@ public:
 };
 
 int main() {
-    static int highScore = 0;
+    
     char choice;
     do {
         srand(time(0)); // Initialize random seed only once
@@ -229,13 +240,18 @@ int main() {
         if (game.getScore() > highScore) {
             highScore = game.getScore(); // Update the high score if the current score is higher
         }
-        cout << "Play again? (y/n): ";
+        system("clear");
+        cout << "\nCurrent Score: " << game.getScore() << endl;
+        cout << "\nHighest Score: " << highScore << endl<<endl;
+        cout << "Do you want to restart the game? (y/n): ";
         cin >> choice;
         cout << endl;
     } while (choice == 'y');
-    cout << "--------------------------------------" << endl;
-    cout<<  "                GAME OVER"<<endl;
-    cout << "--------------------------------------" << endl;
+    system("clear");
     cout << "\nHighest Score: " << highScore << endl<<endl;
+    cout << "\033[1;33m--------------------------------------\033[0m" << endl;
+    cout<<  "\033[1;32m                GAME OVER\033[0m"<<endl;
+    cout << "\033[1;33m--------------------------------------\033[0m" << endl;
+    
     return 0;
 }
