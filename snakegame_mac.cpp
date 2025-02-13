@@ -172,7 +172,6 @@ public:
             cout << endl;
         }
 
-        // Display score in a stylish way
         cout <<"Score : " << score  << endl;
         cout << "\nHighest Score: " << highScore << endl<<endl;
     }
