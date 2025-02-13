@@ -91,6 +91,7 @@ Controls: 'W' - Up | 'S' - Down | 'A' - Left | 'D' - Right | 'X' - Exit
 #                                      #
 ########################################
 Score: 00
+Highest score : 00
 ```
 ## Key Features
 
